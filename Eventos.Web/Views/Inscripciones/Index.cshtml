@@ -1,0 +1,100 @@
+@model IEnumerable<Eventos.Web.Models.Inscripcion>
+
+@{
+    ViewData["Title"] = "Listado de Inscripciones";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark"><i class="bi bi-card-checklist text-primary me-2"></i>Inscripciones</h2>
+        <p class="text-muted mb-0">Control de asistentes registrados a los eventos y gestión de cancelaciones.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary shadow-sm">
+        <i class="bi bi-plus-circle me-1"></i>Nueva Inscripción
+    </a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info py-4 text-center">
+        <i class="bi bi-info-circle fs-3 d-block mb-2"></i>
+        No se registran inscripciones en el sistema actualmente.
+    </div>
+}
+else
+{
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Evento</th>
+                        <th>Fecha del Evento</th>
+                        <th>Asistente</th>
+                        <th>DNI</th>
+                        <th>Fecha de Inscripción</th>
+                        <th class="text-center">Estado</th>
+                        <th class="text-end pe-3">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong class="text-primary">@(item.Evento?.Titulo ?? "Evento no disponible")</strong>
+                                <div>
+                                    <span class="badge @(item.Evento?.Modalidad == "Presencial" ? "bg-info text-dark" : "bg-warning text-dark")">
+                                        @(item.Evento?.Modalidad ?? "")
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                @(item.Evento != null ? item.Evento.Fecha.ToString("dd/MM/yyyy HH:mm") : "-")
+                            </td>
+                            <td>
+                                <span class="fw-semibold">@(item.Asistente?.Nombres ?? "Asistente no disponible")</span>
+                                <div class="small text-muted">@(item.Asistente?.Correo ?? "")</div>
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary font-monospace">@(item.Asistente?.Dni ?? "-")</span>
+                            </td>
+                            <td>
+                                @item.FechaInscripcion.ToString("dd/MM/yyyy HH:mm")
+                            </td>
+                            <td class="text-center">
+                                @if (item.Estado == "Confirmada")
+                                {
+                                    <span class="badge bg-success px-3 py-2">
+                                        <i class="bi bi-check2-circle me-1"></i>Confirmada
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger px-3 py-2">
+                                        <i class="bi bi-x-circle me-1"></i>Cancelada
+                                    </span>
+                                }
+                            </td>
+                            <td class="text-end pe-3">
+                                @if (item.Estado == "Confirmada")
+                                {
+                                    <form asp-action="Cancelar" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('¿Está seguro de que desea cancelar esta inscripción?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Cancelar inscripción">
+                                            <i class="bi bi-x-circle me-1"></i>Cancelar
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small fst-italic">Sin acciones</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

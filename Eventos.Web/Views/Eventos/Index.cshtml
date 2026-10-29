@@ -1,0 +1,133 @@
+@model Eventos.Web.ViewModels.EventoIndexViewModel
+
+@{
+    ViewData["Title"] = "Listado de Eventos";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark"><i class="bi bi-calendar-check text-primary me-2"></i>Eventos Activos</h2>
+        <p class="text-muted mb-0">Gestión de eventos, aforos e inscripciones confirmadas.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary shadow-sm">
+        <i class="bi bi-plus-circle me-1"></i>Nuevo Evento
+    </a>
+</div>
+
+<!-- Filtro por Categoría -->
+<div class="card mb-4 border-0 shadow-sm bg-light">
+    <div class="card-body py-3">
+        <form method="get" asp-action="Index" class="row g-3 align-items-center">
+            <div class="col-auto">
+                <label for="categoriaId" class="col-form-label fw-semibold">
+                    <i class="bi bi-filter me-1"></i>Filtrar por Categoría:
+                </label>
+            </div>
+            <div class="col-auto" style="min-width: 250px;">
+                <select id="categoriaId" name="categoriaId" class="form-select" asp-for="CategoriaId" asp-items="Model.Categorias">
+                    <option value="">-- Todas las categorías --</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="bi bi-search me-1"></i>Filtrar
+                </button>
+                @if (Model.CategoriaId.HasValue)
+                {
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle me-1"></i>Limpiar
+                    </a>
+                }
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (!Model.Eventos.Any())
+{
+    <div class="alert alert-info py-4 text-center">
+        <i class="bi bi-info-circle fs-3 d-block mb-2"></i>
+        No se encontraron eventos activos con el filtro seleccionado.
+    </div>
+}
+else
+{
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Título</th>
+                        <th>Categoría</th>
+                        <th>Fecha y Hora</th>
+                        <th>Lugar</th>
+                        <th>Modalidad</th>
+                        <th>Precio</th>
+                        <th class="text-center">Aforo</th>
+                        <th class="text-center">Inscritos</th>
+                        <th class="text-center">Cupos Disp.</th>
+                        <th class="text-end pe-3">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Eventos)
+                    {
+                        <tr>
+                            <td>
+                                <strong class="text-primary">@item.Titulo</strong>
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary">@item.CategoriaNombre</span>
+                            </td>
+                            <td>
+                                <div>@item.Fecha.ToString("dd/MM/yyyy")</div>
+                                <small class="text-muted">@item.Fecha.ToString("HH:mm")</small>
+                            </td>
+                            <td>@item.Lugar</td>
+                            <td>
+                                @if (item.Modalidad == "Presencial")
+                                {
+                                    <span class="badge bg-info text-dark"><i class="bi bi-building me-1"></i>Presencial</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark"><i class="bi bi-laptop me-1"></i>Virtual</span>
+                                }
+                            </td>
+                            <td>
+                                @(item.Precio == 0 ? "Gratis" : item.Precio.ToString("C2"))
+                            </td>
+                            <td class="text-center fw-semibold">@item.Aforo</td>
+                            <td class="text-center">
+                                <span class="badge bg-success">@item.InscritosConfirmados</span>
+                            </td>
+                            <td class="text-center">
+                                @if (item.CuposDisponibles == 0)
+                                {
+                                    <span class="badge bg-danger">Agotado</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-primary">@item.CuposDisponibles</span>
+                                }
+                            </td>
+                            <td class="text-end pe-3">
+                                <div class="btn-group" role="group">
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info" title="Ver Detalles">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning" title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

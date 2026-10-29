@@ -1,0 +1,83 @@
+@model Eventos.Web.Models.Evento
+
+@{
+    ViewData["Title"] = "Crear Evento";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white py-3">
+                <h5 class="card-title mb-0 fw-bold">
+                    <i class="bi bi-calendar-plus me-2"></i>Registrar Nuevo Evento
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Titulo" class="form-label fw-semibold">Título del Evento</label>
+                        <input asp-for="Titulo" class="form-control" placeholder="Ej: Conferencia Nacional de C#" />
+                        <span asp-validation-for="Titulo" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="CategoriaId" class="form-label fw-semibold">Categoría</label>
+                            <select asp-for="CategoriaId" class="form-select" asp-items="ViewBag.CategoriaId">
+                                <option value="">-- Seleccione una categoría --</option>
+                            </select>
+                            <span asp-validation-for="CategoriaId" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Modalidad" class="form-label fw-semibold">Modalidad</label>
+                            <select asp-for="Modalidad" class="form-select" asp-items="ViewBag.Modalidades">
+                            </select>
+                            <span asp-validation-for="Modalidad" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Fecha" class="form-label fw-semibold">Fecha y Hora</label>
+                            <input asp-for="Fecha" type="datetime-local" class="form-control" />
+                            <span asp-validation-for="Fecha" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Lugar" class="form-label fw-semibold">Lugar o Enlace</label>
+                            <input asp-for="Lugar" class="form-control" placeholder="Ej: Auditorio Central o Sala Zoom" />
+                            <span asp-validation-for="Lugar" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Aforo" class="form-label fw-semibold">Aforo (1 a 5000)</label>
+                            <input asp-for="Aforo" type="number" min="1" max="5000" class="form-control" />
+                            <span asp-validation-for="Aforo" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Precio" class="form-label fw-semibold">Precio (S/.)</label>
+                            <input asp-for="Precio" type="number" step="0.01" min="0" class="form-control" />
+                            <span asp-validation-for="Precio" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>Volver a la lista
+                        </a>
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="bi bi-check-lg me-1"></i>Guardar Evento
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

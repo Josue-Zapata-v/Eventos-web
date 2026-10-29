@@ -1,0 +1,62 @@
+@model Eventos.Web.Models.Inscripcion
+
+@{
+    ViewData["Title"] = "Nueva Inscripción";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white py-3">
+                <h5 class="card-title mb-0 fw-bold">
+                    <i class="bi bi-card-checklist me-2"></i>Registrar Nueva Inscripción
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="mb-4">
+                        <label asp-for="EventoId" class="form-label fw-semibold">
+                            <i class="bi bi-calendar3 me-1 text-primary"></i>Seleccionar Evento
+                        </label>
+                        <select asp-for="EventoId" class="form-select form-select-lg" asp-items="ViewBag.EventoId">
+                            <option value="">-- Seleccione un evento activo --</option>
+                        </select>
+                        <span asp-validation-for="EventoId" class="text-danger small"></span>
+                        <div class="form-text">Solo se listan eventos activos. No se permiten inscripciones a eventos cuya fecha ya pasó ni con aforo completo.</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="AsistenteId" class="form-label fw-semibold">
+                            <i class="bi bi-person me-1 text-primary"></i>Seleccionar Asistente
+                        </label>
+                        <select asp-for="AsistenteId" class="form-select form-select-lg" asp-items="ViewBag.AsistenteId">
+                            <option value="">-- Seleccione un asistente --</option>
+                        </select>
+                        <span asp-validation-for="AsistenteId" class="text-danger small"></span>
+                        <div class="form-text">Solo se listan asistentes activos. No se permiten inscripciones duplicadas para un mismo evento.</div>
+                    </div>
+
+                    <div class="alert alert-info small">
+                        <i class="bi bi-info-circle me-1"></i>
+                        La inscripción se creará automáticamente con la fecha y hora actual y el estado <strong>Confirmada</strong>.
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>Volver a la lista
+                        </a>
+                        <button type="submit" class="btn btn-primary px-4 fw-semibold">
+                            <i class="bi bi-check-circle-fill me-1"></i>Confirmar Inscripción
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
