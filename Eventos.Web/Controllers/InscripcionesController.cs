@@ -68,7 +68,7 @@ public class InscripcionesController : Controller
         if (ModelState.IsValid)
         {
             await _repositorio.CrearAsync(inscripcion);
-            TempData["Mensaje"] = "¡La inscripción se ha registrado con estado 'Confirmada' exitosamente!";
+            TempData["Mensaje"] = "¡La inscripción ha sido registrada exitosamente!";
             return RedirectToAction(nameof(Index));
         }
 
@@ -84,7 +84,7 @@ public class InscripcionesController : Controller
         var cancelado = await _repositorio.CancelarAsync(id);
         if (cancelado)
         {
-            TempData["Mensaje"] = "La inscripción ha sido cancelada exitosamente (Estado: Cancelada).";
+            TempData["Mensaje"] = "La inscripción ha sido cancelada exitosamente.";
         }
         else
         {

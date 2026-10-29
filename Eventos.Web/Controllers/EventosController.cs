@@ -158,7 +158,7 @@ public class EventosController : Controller
         var eliminado = await _repositorio.EliminarLogicoAsync(id);
         if (eliminado)
         {
-            TempData["Mensaje"] = "El evento ha sido eliminado correctamente (eliminación lógica).";
+            TempData["Mensaje"] = "El evento ha sido dado de baja exitosamente.";
         }
         else
         {
